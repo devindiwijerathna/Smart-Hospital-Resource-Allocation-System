@@ -6,7 +6,7 @@
 #define NUM_WARDS 4
 #define MAX_BEDS 20
 
-/* Specialty lookup data */
+
 const char specialtyNames[NUM_SPECIALTIES][30] = {
     "General Practice",
     "Paediatrics",
@@ -28,7 +28,7 @@ const int consultationTime[NUM_SPECIALTIES] = {
     30
 };
 
-/* Ward lookup data */
+
 const char wardNames[NUM_WARDS][30] = {
     "General Ward",
     "Paediatric Ward",
@@ -50,10 +50,10 @@ const int wardCapacity[NUM_WARDS] = {
     5
 };
 
-/* Bed occupancy */
+
 int bedOccupancy[NUM_WARDS][MAX_BEDS] = {0};
 
-/* Patient data */
+
 char patientName[MAX_PATIENTS][100];
 char patientID[MAX_PATIENTS][20];
 
@@ -71,7 +71,7 @@ int specialtyQueue[NUM_SPECIALTIES];
 int patientCount = 0;
 
 
-/* Display main menu */
+
 void displayMenu()
 {
     printf("\n=====================================\n");
@@ -88,7 +88,70 @@ void displayMenu()
 }
 
 
-/* Display specialties */
+void displaySpecialties();
+void displayWards();
+void registerPatient()
+{
+    int index;
+    int specialty;
+
+    if(patientCount >= MAX_PATIENTS)
+    {
+        printf("\nPatient limit reached!\n");
+        return;
+    }
+
+    index = patientCount;
+
+    printf("\n=====================================\n");
+    printf("       PATIENT REGISTRATION\n");
+    printf("=====================================\n");
+
+    sprintf(patientID[index], "PAT-%04d", 1001 + index);
+
+    printf("Patient ID: %s\n", patientID[index]);
+
+    printf("Enter patient name: ");
+    scanf(" %[^\n]", patientName[index]);
+
+    printf("Enter age: ");
+    scanf("%d", &patientAge[index]);
+
+    printf("\nEmergency / Triage Level\n");
+    printf("1. Normal\n");
+    printf("2. Urgent\n");
+    printf("3. Critical\n");
+
+    printf("Enter level: ");
+    scanf("%d", &urgencyLevel[index]);
+
+    displaySpecialties();
+
+    printf("Enter specialty ID (1-4): ");
+    scanf("%d", &specialty);
+
+    patientSpecialty[index] = specialty - 1;
+
+    waitingTime[index] =
+        specialtyQueue[patientSpecialty[index]]
+        * consultationTime[patientSpecialty[index]];
+
+    specialtyQueue[patientSpecialty[index]]++;
+
+    admitted[index] = 0;
+    patientWard[index] = -1;
+    daysAdmitted[index] = 0;
+    assignedBed[index] = -1;
+
+    patientCount++;
+
+    printf("\nPatient registered successfully!\n");
+    printf("Patient ID   : %s\n", patientID[index]);
+    printf("Patient Name : %s\n", patientName[index]);
+    printf("Waiting Time : %d minutes\n", waitingTime[index]);
+}
+
+
 void displaySpecialties()
 {
     int i;
@@ -106,7 +169,7 @@ void displaySpecialties()
 }
 
 
-/* Display wards */
+
 void displayWards()
 {
     int i;
@@ -138,7 +201,7 @@ int main()
         switch(choice)
         {
             case 1:
-                printf("\nPatient registration will be added next.\n");
+                registerPatient();
                 break;
 
             case 2:
