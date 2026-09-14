@@ -6,7 +6,7 @@
 #define NUM_WARDS 4
 #define MAX_BEDS 20
 
-/* Specialty lookup data */
+
 const char specialtyNames[NUM_SPECIALTIES][30] = {
     "General Practice",
     "Paediatrics",
@@ -28,7 +28,7 @@ const int consultationTime[NUM_SPECIALTIES] = {
     30
 };
 
-/* Ward lookup data */
+
 const char wardNames[NUM_WARDS][30] = {
     "General Ward",
     "Paediatric Ward",
@@ -50,10 +50,10 @@ const int wardCapacity[NUM_WARDS] = {
     5
 };
 
-/* Bed occupancy */
+
 int bedOccupancy[NUM_WARDS][MAX_BEDS] = {0};
 
-/* Patient data */
+
 char patientName[MAX_PATIENTS][100];
 char patientID[MAX_PATIENTS][20];
 
@@ -71,7 +71,7 @@ int specialtyQueue[NUM_SPECIALTIES];
 int patientCount = 0;
 
 
-/* Display main menu */
+
 void displayMenu()
 {
     printf("\n=====================================\n");
@@ -88,7 +88,7 @@ void displayMenu()
 }
 
 
-/* Display specialties */
+
 void displaySpecialties()
 {
     int i;
@@ -106,7 +106,7 @@ void displaySpecialties()
 }
 
 
-/* Display wards */
+
 void displayWards()
 {
     int i;
