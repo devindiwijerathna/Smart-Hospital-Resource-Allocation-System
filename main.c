@@ -213,6 +213,79 @@ void searchPatient()
 }
 
 
+void allocateBed()
+{
+    int patientIndex;
+    int ward;
+    int bed;
+    int i;
+
+    if(patientCount == 0)
+    {
+        printf("\nNo patients registered!\n");
+        return;
+    }
+
+    printf("\nEnter Patient Number (1-%d): ", patientCount);
+    scanf("%d", &patientIndex);
+
+    patientIndex--;
+
+    if(patientIndex < 0 || patientIndex >= patientCount)
+    {
+        printf("\nInvalid patient number!\n");
+        return;
+    }
+
+    if(admitted[patientIndex] == 1)
+    {
+        printf("\nBed already allocated to this patient!\n");
+        return;
+    }
+
+    displayWards();
+
+    printf("\nEnter Ward Number (1-4): ");
+    scanf("%d", &ward);
+
+    ward--;
+
+    if(ward < 0 || ward >= NUM_WARDS)
+    {
+        printf("\nInvalid ward number!\n");
+        return;
+    }
+
+    bed = -1;
+
+    for(i = 0; i < wardCapacity[ward]; i++)
+    {
+        if(bedOccupancy[ward][i] == 0)
+        {
+            bed = i;
+            break;
+        }
+    }
+
+    if(bed == -1)
+    {
+        printf("\nNo beds available in %s!\n", wardNames[ward]);
+        return;
+    }
+
+    bedOccupancy[ward][bed] = 1;
+
+    admitted[patientIndex] = 1;
+    patientWard[patientIndex] = ward;
+    assignedBed[patientIndex] = bed;
+
+    printf("\nBed allocated successfully!\n");
+    printf("Patient : %s\n", patientName[patientIndex]);
+    printf("Ward    : %s\n", wardNames[ward]);
+    printf("Bed No  : %d\n", bed + 1);
+}
+
+
 
 void displaySpecialties()
 {
@@ -275,7 +348,7 @@ int main()
                 break;
 
             case 4:
-                printf("\nBed allocation will be added next.\n");
+                allocateBed();
                 break;
 
             case 5:
