@@ -151,6 +151,34 @@ void registerPatient()
     printf("Waiting Time : %d minutes\n", waitingTime[index]);
 }
 
+void displayAllPatients()
+{
+    int i;
+
+    if(patientCount == 0)
+    {
+        printf("\nNo patients registered yet.\n");
+        return;
+    }
+
+    printf("\n==============================================\n");
+    printf("              ALL PATIENTS\n");
+    printf("==============================================\n");
+
+    for(i = 0; i < patientCount; i++)
+    {
+        printf("\nPatient %d\n", i + 1);
+        printf("Patient ID    : %s\n", patientID[i]);
+        printf("Name          : %s\n", patientName[i]);
+        printf("Age           : %d\n", patientAge[i]);
+        printf("Emergency     : %d\n", urgencyLevel[i]);
+        printf("Specialty     : %s\n",
+               specialtyNames[patientSpecialty[i]]);
+        printf("Waiting Time  : %d minutes\n", waitingTime[i]);
+    }
+}
+
+
 
 
 
@@ -207,7 +235,7 @@ int main()
                 break;
 
             case 2:
-                printf("\nPatient display will be added next.\n");
+               displayAllPatients();
                 break;
 
             case 3:
