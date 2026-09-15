@@ -152,6 +152,8 @@ void registerPatient()
 }
 
 
+
+
 void displaySpecialties()
 {
     int i;
