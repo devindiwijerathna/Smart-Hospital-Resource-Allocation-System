@@ -179,6 +179,38 @@ void displayAllPatients()
 }
 
 
+void searchPatient()
+{
+    char searchID[20];
+    int i;
+    int found = 0;
+
+    printf("\nEnter Patient ID: ");
+    scanf("%s", searchID);
+
+    for(i = 0; i < patientCount; i++)
+    {
+        if(strcmp(patientID[i], searchID) == 0)
+        {
+            printf("\nPatient Found!\n");
+            printf("Patient ID   : %s\n", patientID[i]);
+            printf("Name         : %s\n", patientName[i]);
+            printf("Age          : %d\n", patientAge[i]);
+            printf("Emergency    : %d\n", urgencyLevel[i]);
+            printf("Specialty    : %s\n",
+                   specialtyNames[patientSpecialty[i]]);
+            printf("Waiting Time : %d minutes\n", waitingTime[i]);
+
+            found = 1;
+            break;
+        }
+    }
+
+    if(found == 0)
+    {
+        printf("\nPatient not found!\n");
+    }
+}
 
 
 
@@ -235,11 +267,11 @@ int main()
                 break;
 
             case 2:
-               displayAllPatients();
+                displayAllPatients();
                 break;
 
             case 3:
-                printf("\nPatient search will be added next.\n");
+                searchPatient();
                 break;
 
             case 4:
