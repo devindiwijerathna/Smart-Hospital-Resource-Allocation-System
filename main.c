@@ -84,6 +84,7 @@ void displayMenu()
     printf("5. Calculate Bill\n");
     printf("6. Display Reports\n");
     printf("7. Exit\n");
+    printf("8. Display Admission Details\n");
     printf("=====================================\n");
 }
 
@@ -321,6 +322,39 @@ void displayWards()
     }
 }
 
+void displayAdmissionDetails()
+{
+    int i;
+
+    if(patientCount == 0)
+    {
+        printf("\nNo patients registered!\n");
+        return;
+    }
+
+    printf("\n=====================================\n");
+    printf("       ADMISSION DETAILS\n");
+    printf("=====================================\n");
+
+    for(i = 0; i < patientCount; i++)
+    {
+        printf("\nPatient ID : %s\n", patientID[i]);
+        printf("Name       : %s\n", patientName[i]);
+
+        if(admitted[i] == 1)
+        {
+            printf("Status     : Admitted\n");
+            printf("Ward       : %s\n", wardNames[patientWard[i]]);
+            printf("Bed No     : %d\n", assignedBed[i] + 1);
+        }
+        else
+        {
+            printf("Status     : Not Admitted\n");
+        }
+    }
+}
+
+
 
 int main()
 {
@@ -361,6 +395,10 @@ int main()
 
             case 7:
                 printf("\nThank you for using Smart Hospital System!\n");
+                break;
+
+            case 8:
+                displayAdmissionDetails();
                 break;
 
             default:
