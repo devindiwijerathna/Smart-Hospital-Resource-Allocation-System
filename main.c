@@ -86,6 +86,7 @@ void displayMenu()
     printf("7. Exit\n");
     printf("8. Display Admission Details\n");
     printf("9. Display Queue Status\n");
+    printf("10. Consultation Fee\n");
     printf("=====================================\n");
 }
 
@@ -376,6 +377,40 @@ void displayQueueStatus()
 
 
 
+void calculateConsultationFee()
+{
+    int patientIndex;
+    int specialty;
+
+    if(patientCount == 0)
+    {
+        printf("\nNo patients registered!\n");
+        return;
+    }
+
+    printf("\nEnter Patient Number (1-%d): ", patientCount);
+    scanf("%d", &patientIndex);
+
+    patientIndex--;
+
+    if(patientIndex < 0 || patientIndex >= patientCount)
+    {
+        printf("\nInvalid patient number!\n");
+        return;
+    }
+
+    specialty = patientSpecialty[patientIndex];
+
+    printf("\n=====================================\n");
+    printf("       CONSULTATION FEE\n");
+    printf("=====================================\n");
+    printf("Patient    : %s\n", patientName[patientIndex]);
+    printf("Specialty  : %s\n", specialtyNames[specialty]);
+    printf("Fee        : Rs. %.2f\n", consultationFee[specialty]);
+}
+
+
+
 int main()
 {
     int choice;
@@ -421,9 +456,12 @@ int main()
                 displayAdmissionDetails();
                 break;
 
-
             case 9:
                 displayQueueStatus();
+                break;
+
+            case 10:
+                calculateConsultationFee();
                 break;
 
             default:
