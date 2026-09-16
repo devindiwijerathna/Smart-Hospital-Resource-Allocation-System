@@ -88,6 +88,7 @@ void displayMenu()
     printf("9. Display Queue Status\n");
     printf("10. Consultation Fee\n");
     printf("11. Emergency Surcharge\n");
+    printf("12 Age Discount\n");
     printf("=====================================\n");
 }
 
@@ -465,6 +466,55 @@ void calculateEmergencySurcharge()
 }
 
 
+
+void calculateAgeDiscount()
+{
+    int patientIndex;
+    float fee;
+    float discountRate;
+    float discount;
+
+    if(patientCount == 0)
+    {
+        printf("\nNo patients registered!\n");
+        return;
+    }
+
+    printf("\nEnter Patient Number (1-%d): ", patientCount);
+    scanf("%d", &patientIndex);
+
+    patientIndex--;
+
+    if(patientIndex < 0 || patientIndex >= patientCount)
+    {
+        printf("\nInvalid patient number!\n");
+        return;
+    }
+
+    fee = consultationFee[patientSpecialty[patientIndex]];
+
+    if(patientAge[patientIndex] < 5 ||
+       patientAge[patientIndex] > 65)
+    {
+        discountRate = 0.15;
+    }
+    else
+    {
+        discountRate = 0.00;
+    }
+
+    discount = fee * discountRate;
+
+    printf("\n=====================================\n");
+    printf("          AGE DISCOUNT\n");
+    printf("=====================================\n");
+    printf("Patient          : %s\n", patientName[patientIndex]);
+    printf("Age              : %d\n", patientAge[patientIndex]);
+    printf("Consultation Fee : Rs. %.2f\n", fee);
+    printf("Discount         : Rs. %.2f\n", discount);
+}
+
+
 int main()
 {
     int choice;
@@ -520,6 +570,10 @@ int main()
 
             case 11:
                 calculateEmergencySurcharge();
+                break;
+
+            case 12:
+                calculateAgeDiscount();
                 break;
 
             default:
