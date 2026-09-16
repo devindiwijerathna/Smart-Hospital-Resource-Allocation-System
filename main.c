@@ -85,6 +85,7 @@ void displayMenu()
     printf("6. Display Reports\n");
     printf("7. Exit\n");
     printf("8. Display Admission Details\n");
+    printf("9. Display Queue Status\n");
     printf("=====================================\n");
 }
 
@@ -356,6 +357,25 @@ void displayAdmissionDetails()
 
 
 
+void displayQueueStatus()
+{
+    int i;
+
+    printf("\n=====================================\n");
+    printf("          QUEUE STATUS\n");
+    printf("=====================================\n");
+
+    for(i = 0; i < NUM_SPECIALTIES; i++)
+    {
+        printf("%d. %s\n", i + 1, specialtyNames[i]);
+        printf("   Patients in queue : %d\n", specialtyQueue[i]);
+        printf("   Waiting time      : %d minutes\n",
+               specialtyQueue[i] * consultationTime[i]);
+    }
+}
+
+
+
 int main()
 {
     int choice;
@@ -399,6 +419,11 @@ int main()
 
             case 8:
                 displayAdmissionDetails();
+                break;
+
+
+            case 9:
+                displayQueueStatus();
                 break;
 
             default:
