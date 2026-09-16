@@ -88,7 +88,8 @@ void displayMenu()
     printf("9. Display Queue Status\n");
     printf("10. Consultation Fee\n");
     printf("11. Emergency Surcharge\n");
-    printf("12 Age Discount\n");
+    printf("12. Complete Bill\n");
+    printf("13. Age Discount\n");
     printf("=====================================\n");
 }
 
@@ -515,6 +516,90 @@ void calculateAgeDiscount()
 }
 
 
+void calculateBill()
+{
+    int patientIndex;
+    int specialty;
+    int ward;
+    int level;
+    int age;
+    float consultation;
+    float surchargeRate;
+    float surcharge;
+    float wardCost;
+    float gross;
+    float discountRate;
+    float discount;
+    float finalBill;
+
+    if(patientCount == 0)
+    {
+        printf("\nNo patients registered!\n");
+        return;
+    }
+
+    printf("\nEnter Patient Number (1-%d): ", patientCount);
+    scanf("%d", &patientIndex);
+
+    patientIndex--;
+
+    if(patientIndex < 0 || patientIndex >= patientCount)
+    {
+        printf("\nInvalid patient number!\n");
+        return;
+    }
+
+    specialty = patientSpecialty[patientIndex];
+    level = urgencyLevel[patientIndex];
+    age = patientAge[patientIndex];
+
+    consultation = consultationFee[specialty];
+
+    /* Emergency surcharge */
+    if(level == 1)
+        surchargeRate = 0.00;
+    else if(level == 2)
+        surchargeRate = 0.20;
+    else
+        surchargeRate = 0.50;
+
+    surcharge = consultation * surchargeRate;
+
+    /* Ward cost */
+    wardCost = 0.00;
+
+    if(admitted[patientIndex] == 1)
+    {
+        ward = patientWard[patientIndex];
+        wardCost = wardRate[ward] * daysAdmitted[patientIndex];
+    }
+
+    gross = consultation + surcharge + wardCost;
+
+    /* Age discount */
+    if(age < 5 || age > 65)
+        discountRate = 0.15;
+    else
+        discountRate = 0.00;
+
+    discount = gross * discountRate;
+
+    finalBill = gross - discount;
+
+    printf("\n=====================================\n");
+    printf("            PATIENT BILL\n");
+    printf("=====================================\n");
+    printf("Patient          : %s\n", patientName[patientIndex]);
+    printf("Consultation     : Rs. %.2f\n", consultation);
+    printf("Emergency Charge : Rs. %.2f\n", surcharge);
+    printf("Ward Cost        : Rs. %.2f\n", wardCost);
+    printf("Gross Total      : Rs. %.2f\n", gross);
+    printf("Discount         : Rs. %.2f\n", discount);
+    printf("Final Bill       : Rs. %.2f\n", finalBill);
+    printf("=====================================\n");
+}
+
+
 int main()
 {
     int choice;
@@ -573,6 +658,10 @@ int main()
                 break;
 
             case 12:
+                calculateBill();
+                break;
+
+            case 13:
                 calculateAgeDiscount();
                 break;
 
