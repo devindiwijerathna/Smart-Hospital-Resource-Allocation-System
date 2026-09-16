@@ -87,6 +87,7 @@ void displayMenu()
     printf("8. Display Admission Details\n");
     printf("9. Display Queue Status\n");
     printf("10. Consultation Fee\n");
+    printf("11. Emergency Surcharge\n");
     printf("=====================================\n");
 }
 
@@ -411,6 +412,59 @@ void calculateConsultationFee()
 
 
 
+void calculateEmergencySurcharge()
+{
+    int patientIndex;
+    int level;
+    float fee;
+    float surchargeRate;
+    float surcharge;
+
+    if(patientCount == 0)
+    {
+        printf("\nNo patients registered!\n");
+        return;
+    }
+
+    printf("\nEnter Patient Number (1-%d): ", patientCount);
+    scanf("%d", &patientIndex);
+
+    patientIndex--;
+
+    if(patientIndex < 0 || patientIndex >= patientCount)
+    {
+        printf("\nInvalid patient number!\n");
+        return;
+    }
+
+    level = urgencyLevel[patientIndex];
+    fee = consultationFee[patientSpecialty[patientIndex]];
+
+    if(level == 1)
+        surchargeRate = 0.00;
+    else if(level == 2)
+        surchargeRate = 0.20;
+    else if(level == 3)
+        surchargeRate = 0.50;
+    else
+    {
+        printf("\nInvalid emergency level!\n");
+        return;
+    }
+
+    surcharge = fee * surchargeRate;
+
+    printf("\n=====================================\n");
+    printf("       EMERGENCY SURCHARGE\n");
+    printf("=====================================\n");
+    printf("Patient           : %s\n", patientName[patientIndex]);
+    printf("Emergency Level   : %d\n", level);
+    printf("Consultation Fee  : Rs. %.2f\n", fee);
+    printf("Surcharge         : Rs. %.2f\n", surcharge);
+    printf("Total              : Rs. %.2f\n", fee + surcharge);
+}
+
+
 int main()
 {
     int choice;
@@ -462,6 +516,10 @@ int main()
 
             case 10:
                 calculateConsultationFee();
+                break;
+
+            case 11:
+                calculateEmergencySurcharge();
                 break;
 
             default:
