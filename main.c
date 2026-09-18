@@ -285,6 +285,15 @@ void allocateBed()
     patientWard[patientIndex] = ward;
     assignedBed[patientIndex] = bed;
 
+    printf("Enter number of days: ");
+    scanf("%d", &daysAdmitted[patientIndex]);
+
+    if(daysAdmitted[patientIndex] <= 0)
+    {
+       printf("Invalid number of days!\n");
+       daysAdmitted[patientIndex] = 1;
+    }
+
     printf("\nBed allocated successfully!\n");
     printf("Patient : %s\n", patientName[patientIndex]);
     printf("Ward    : %s\n", wardNames[ward]);
