@@ -89,7 +89,8 @@ void displayMenu()
     printf("10. Consultation Fee\n");
     printf("11. Emergency Surcharge\n");
     printf("12. Complete Bill\n");
-    printf("13. Age Discount\n");
+    printf("13. Sort Patients by Priority\n\n");
+    printf("14. Age Discount\n");
     printf("=====================================\n");
 }
 
@@ -610,6 +611,66 @@ void calculateBill()
 }
 
 
+
+void sortPatientsByPriority()
+{
+    int i, j;
+    int tempInt;
+    char tempName[100];
+    char tempID[20];
+
+    for(i = 0; i < patientCount - 1; i++)
+    {
+        for(j = i + 1; j < patientCount; j++)
+        {
+            if(urgencyLevel[i] < urgencyLevel[j])
+            {
+                tempInt = urgencyLevel[i];
+                urgencyLevel[i] = urgencyLevel[j];
+                urgencyLevel[j] = tempInt;
+
+                tempInt = patientAge[i];
+                patientAge[i] = patientAge[j];
+                patientAge[j] = tempInt;
+
+                tempInt = patientSpecialty[i];
+                patientSpecialty[i] = patientSpecialty[j];
+                patientSpecialty[j] = tempInt;
+
+                tempInt = admitted[i];
+                admitted[i] = admitted[j];
+                admitted[j] = tempInt;
+
+                tempInt = patientWard[i];
+                patientWard[i] = patientWard[j];
+                patientWard[j] = tempInt;
+
+                tempInt = daysAdmitted[i];
+                daysAdmitted[i] = daysAdmitted[j];
+                daysAdmitted[j] = tempInt;
+
+                tempInt = assignedBed[i];
+                assignedBed[i] = assignedBed[j];
+                assignedBed[j] = tempInt;
+
+                tempInt = waitingTime[i];
+                waitingTime[i] = waitingTime[j];
+                waitingTime[j] = tempInt;
+
+                strcpy(tempName, patientName[i]);
+                strcpy(patientName[i], patientName[j]);
+                strcpy(patientName[j], tempName);
+
+                strcpy(tempID, patientID[i]);
+                strcpy(patientID[i], patientID[j]);
+                strcpy(patientID[j], tempID);
+            }
+        }
+    }
+
+    printf("\nPatients sorted by emergency priority!\n");
+}
+
 int main()
 {
     int choice;
@@ -672,6 +733,10 @@ int main()
                 break;
 
             case 13:
+                sortPatientsByPriority();
+                break;
+
+            case 14:
                 calculateAgeDiscount();
                 break;
 
