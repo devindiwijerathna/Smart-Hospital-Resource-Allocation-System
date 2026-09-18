@@ -564,7 +564,7 @@ void calculateBill()
 
     consultation = consultationFee[specialty];
 
-    /* Emergency surcharge */
+
     if(level == 1)
         surchargeRate = 0.00;
     else if(level == 2)
@@ -574,7 +574,8 @@ void calculateBill()
 
     surcharge = consultation * surchargeRate;
 
-    /* Ward cost */
+
+
     wardCost = 0.00;
 
     if(admitted[patientIndex] == 1)
@@ -585,7 +586,7 @@ void calculateBill()
 
     gross = consultation + surcharge + wardCost;
 
-    /* Age discount */
+
     if(age < 5 || age > 65)
         discountRate = 0.15;
     else
