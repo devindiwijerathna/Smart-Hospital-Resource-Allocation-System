@@ -90,7 +90,8 @@ void displayMenu()
     printf("11. Complete Bill\n");
     printf("12. Age Discount\n");
     printf("13. Sort Patients by Priority\n");
-    printf("14. Exit\n");
+    printf("14. Save Hospital Data\n");
+    printf("15. Exit\n");
     printf("=====================================\n");
 }
 
@@ -784,6 +785,90 @@ void sortPatientsByPriority()
     printf("\nPatients sorted by emergency priority!\n");
 }
 
+
+
+
+void savePatientRecords()
+{
+    FILE *file;
+    int i;
+
+    file = fopen("patient_records.txt", "w");
+
+    if(file == NULL)
+    {
+        printf("\nError opening patient_records.txt!\n");
+        return;
+    }
+
+    for(i = 0; i < patientCount; i++)
+    {
+        fprintf(file, "Patient ID: %s\n", patientID[i]);
+        fprintf(file, "Name: %s\n", patientName[i]);
+        fprintf(file, "Age: %d\n", patientAge[i]);
+        fprintf(file, "Emergency Level: %d\n", urgencyLevel[i]);
+        fprintf(file, "Specialty: %s\n",
+                specialtyNames[patientSpecialty[i]]);
+        fprintf(file, "Waiting Time: %d minutes\n",
+                waitingTime[i]);
+
+        if(admitted[i] == 1)
+        {
+            fprintf(file, "Ward: %s\n",
+                    wardNames[patientWard[i]]);
+            fprintf(file, "Bed: %d\n",
+                    assignedBed[i] + 1);
+            fprintf(file, "Days Admitted: %d\n",
+                    daysAdmitted[i]);
+        }
+        else
+        {
+            fprintf(file, "Status: Not Admitted\n");
+        }
+
+        fprintf(file, "-----------------------------\n");
+    }
+
+    fclose(file);
+
+    printf("\nPatient records saved successfully!\n");
+}
+
+
+
+void saveBedsStatus()
+{
+    FILE *file;
+    int i, j;
+
+    file = fopen("beds_status.txt", "w");
+
+    if(file == NULL)
+    {
+        printf("\nError opening beds_status.txt!\n");
+        return;
+    }
+
+    for(i = 0; i < NUM_WARDS; i++)
+    {
+        fprintf(file, "Ward: %s\n", wardNames[i]);
+        fprintf(file, "Capacity: %d\n", wardCapacity[i]);
+
+        for(j = 0; j < wardCapacity[i]; j++)
+        {
+            fprintf(file, "Bed %d: %s\n",
+                    j + 1,
+                    bedOccupancy[i][j] == 1 ? "Occupied" : "Available");
+        }
+
+        fprintf(file, "-----------------------------\n");
+    }
+
+    fclose(file);
+
+    printf("\nBed status saved successfully!\n");
+}
+
 int main()
 {
     int choice;
@@ -850,6 +935,11 @@ int main()
                 break;
 
             case 14:
+                savePatientRecords();
+                saveBedsStatus();
+                break;
+
+            case 15:
                 printf("\nThank you for using Smart Hospital System!\n");
                 break;
 
@@ -857,7 +947,7 @@ int main()
                 printf("\nInvalid choice! Please enter 1-7.\n");
         }
 
-    } while(choice != 14);
+    } while(choice != 15);
 
     return 0;
 }
