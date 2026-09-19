@@ -125,6 +125,12 @@ void registerPatient()
     printf("Enter age: ");
     scanf("%d", &patientAge[index]);
 
+    if(patientAge[index] < 0 || patientAge[index] > 120)
+    {
+         printf("\nInvalid age!\n");
+         return;
+   }
+
     printf("\nEmergency / Triage Level\n");
     printf("1. Normal\n");
     printf("2. Urgent\n");
@@ -133,16 +139,26 @@ void registerPatient()
     printf("Enter level: ");
     scanf("%d", &urgencyLevel[index]);
 
+    if(urgencyLevel[index] < 1 || urgencyLevel[index] > 3)
+    {
+         printf("\nInvalid emergency level!\n");
+         return;
+    }
+
     displaySpecialties();
 
     printf("Enter specialty ID (1-4): ");
     scanf("%d", &specialty);
 
+    if(specialty < 1 || specialty > 4)
+    {
+       printf("\nInvalid specialty!\n");
+       return;
+    }
+
     patientSpecialty[index] = specialty - 1;
 
-    waitingTime[index] =
-        specialtyQueue[patientSpecialty[index]]
-        * consultationTime[patientSpecialty[index]];
+    waitingTime[index] = specialtyQueue[patientSpecialty[index]] * consultationTime[patientSpecialty[index]];
 
     specialtyQueue[patientSpecialty[index]]++;
 
