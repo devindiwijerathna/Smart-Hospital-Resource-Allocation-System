@@ -77,20 +77,20 @@ void displayMenu()
     printf("\n=====================================\n");
     printf("       SMART HOSPITAL SYSTEM\n");
     printf("=====================================\n");
-    printf("1. Register Patient\n");
-    printf("2. Display Patients\n");
-    printf("3. Search Patient\n");
-    printf("4. Allocate Bed\n");
-    printf("5. Calculate Bill\n");
-    printf("6. Display Reports\n");
-    printf("7. Exit\n");
-    printf("8. Display Admission Details\n");
-    printf("9. Display Queue Status\n");
-    printf("10. Consultation Fee\n");
-    printf("11. Emergency Surcharge\n");
-    printf("12. Complete Bill\n");
-    printf("13. Sort Patients by Priority\n\n");
-    printf("14. Age Discount\n");
+    printf("01. Register Patient\n");
+    printf("02. Display Patients\n");
+    printf("03. Search Patient\n");
+    printf("04. Allocate Bed\n");
+    printf("05. Calculate Bill\n");
+    printf("06. Display Reports\n");
+    printf("07. Display Admission Details\n");
+    printf("08. Display Queue Status\n");
+    printf("09. Consultation Fee\n");
+    printf("10. Emergency Surcharge\n");
+    printf("11. Complete Bill\n");
+    printf("12. Age Discount\n");
+    printf("13. Sort Patients by Priority\n");
+    printf("14. Exit\n");
     printf("=====================================\n");
 }
 
@@ -814,7 +814,7 @@ int main()
                 break;
 
             case 5:
-                printf("\nBill calculation will be added next.\n");
+                calculateBill();
                 break;
 
             case 6:
@@ -822,27 +822,27 @@ int main()
                 break;
 
             case 7:
-                printf("\nThank you for using Smart Hospital System!\n");
-                break;
-
-            case 8:
                 displayAdmissionDetails();
                 break;
 
-            case 9:
+            case 8:
                 displayQueueStatus();
                 break;
 
-            case 10:
+            case 9:
                 calculateConsultationFee();
                 break;
 
-            case 11:
+            case 10:
                 calculateEmergencySurcharge();
                 break;
 
-            case 12:
+            case 11:
                 calculateBill();
+                break;
+
+            case 12:
+                calculateAgeDiscount();
                 break;
 
             case 13:
@@ -850,14 +850,14 @@ int main()
                 break;
 
             case 14:
-                calculateAgeDiscount();
+                printf("\nThank you for using Smart Hospital System!\n");
                 break;
 
             default:
                 printf("\nInvalid choice! Please enter 1-7.\n");
         }
 
-    } while(choice != 7);
+    } while(choice != 14);
 
     return 0;
 }
