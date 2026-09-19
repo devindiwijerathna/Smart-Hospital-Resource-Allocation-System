@@ -243,6 +243,7 @@ void allocateBed()
     int ward;
     int bed;
     int i;
+    int days;
 
     if(patientCount == 0)
     {
@@ -269,7 +270,7 @@ void allocateBed()
 
     displayWards();
 
-    printf("\nEnter Ward Number (1-4): ");
+    printf("\nEnter Ward Number (1-%d): ", NUM_WARDS);
     scanf("%d", &ward);
 
     ward--;
@@ -277,6 +278,15 @@ void allocateBed()
     if(ward < 0 || ward >= NUM_WARDS)
     {
         printf("\nInvalid ward number!\n");
+        return;
+    }
+
+    printf("Enter number of days: ");
+    scanf("%d", &days);
+
+    if(days <= 0)
+    {
+        printf("\nInvalid number of days!\n");
         return;
     }
 
@@ -293,7 +303,8 @@ void allocateBed()
 
     if(bed == -1)
     {
-        printf("\nNo beds available in %s!\n", wardNames[ward]);
+        printf("\nNo beds available in %s!\n",
+               wardNames[ward]);
         return;
     }
 
@@ -302,22 +313,26 @@ void allocateBed()
     admitted[patientIndex] = 1;
     patientWard[patientIndex] = ward;
     assignedBed[patientIndex] = bed;
+    daysAdmitted[patientIndex] = days;
 
-    printf("Enter number of days: ");
-    scanf("%d", &daysAdmitted[patientIndex]);
+    printf("\n=====================================\n");
+    printf("       BED ALLOCATION SUCCESSFUL\n");
+    printf("=====================================\n");
 
-    if(daysAdmitted[patientIndex] <= 0)
-    {
-       printf("Invalid number of days!\n");
-       daysAdmitted[patientIndex] = 1;
-    }
+    printf("Patient : %s\n",
+           patientName[patientIndex]);
 
-    printf("\nBed allocated successfully!\n");
-    printf("Patient : %s\n", patientName[patientIndex]);
-    printf("Ward    : %s\n", wardNames[ward]);
-    printf("Bed No  : %d\n", bed + 1);
+    printf("Ward    : %s\n",
+           wardNames[ward]);
+
+    printf("Bed No  : %d\n",
+           bed + 1);
+
+    printf("Days    : %d\n",
+           days);
+
+    printf("=====================================\n");
 }
-
 
 
 void displaySpecialties()
@@ -629,85 +644,201 @@ void calculateBill()
 
 
 
+void completeBill()
+{
+    int patientIndex;
+    int specialty;
+    int level;
+    float consultation;
+    float surchargeRate;
+    float surcharge;
+    float wardCost;
+    float gross;
+    float discountRate;
+    float discount;
+    float finalBill;
+
+    if(patientCount == 0)
+    {
+        printf("\nNo patients registered!\n");
+        return;
+    }
+
+    printf("\nEnter Patient Number (1-%d): ", patientCount);
+    scanf("%d", &patientIndex);
+
+    patientIndex--;
+
+    if(patientIndex < 0 || patientIndex >= patientCount)
+    {
+        printf("\nInvalid patient number!\n");
+        return;
+    }
+
+    specialty = patientSpecialty[patientIndex];
+    level = urgencyLevel[patientIndex];
+
+
+    consultation = consultationFee[specialty];
+
+
+    if(level == 1)
+        surchargeRate = 0.00;
+    else if(level == 2)
+        surchargeRate = 0.20;
+    else
+        surchargeRate = 0.50;
+
+    surcharge = consultation * surchargeRate;
+
+    /* Ward cost */
+    wardCost = 0.00;
+
+    if(admitted[patientIndex] == 1)
+    {
+        wardCost = wardRate[patientWard[patientIndex]]
+                   * daysAdmitted[patientIndex];
+    }
+
+    /* Gross total */
+    gross = consultation + surcharge + wardCost;
+
+    /* Age discount */
+    if(patientAge[patientIndex] < 5 ||
+       patientAge[patientIndex] > 65)
+    {
+        discountRate = 0.15;
+    }
+    else
+    {
+        discountRate = 0.00;
+    }
+
+    discount = gross * discountRate;
+
+    finalBill = gross - discount;
+
+    printf("\n=====================================\n");
+    printf("          COMPLETE BILL\n");
+    printf("=====================================\n");
+
+    printf("Patient ID       : %s\n",
+           patientID[patientIndex]);
+
+    printf("Patient Name     : %s\n",
+           patientName[patientIndex]);
+
+    printf("Age              : %d\n",
+           patientAge[patientIndex]);
+
+    printf("Specialty        : %s\n",
+           specialtyNames[specialty]);
+
+    printf("Consultation Fee : Rs. %.2f\n",
+           consultation);
+
+    printf("Emergency Charge : Rs. %.2f\n",
+           surcharge);
+
+    printf("Ward Cost        : Rs. %.2f\n",
+           wardCost);
+
+    printf("-------------------------------------\n");
+
+    printf("Gross Total      : Rs. %.2f\n",
+           gross);
+
+    printf("Age Discount     : Rs. %.2f\n",
+           discount);
+
+    printf("-------------------------------------\n");
+
+    printf("FINAL PAYABLE    : Rs. %.2f\n",
+           finalBill);
+
+    printf("=====================================\n");
+}
+
+
 void displayReports()
 {
-    int i;
-    int level1 = 0, level2 = 0, level3 = 0;
+    int i, j;
+
+    int level1 = 0;
+    int level2 = 0;
+    int level3 = 0;
+
     int occupied = 0;
     int totalBeds = 0;
 
-
     float totalRevenue = 0.0;
     float totalDiscount = 0.0;
-    float finalBill;
-    float consultation;
-    float surcharge;
-    float wardCost;
-    float discount;
-    float surchargeRate;
-    float discountRate;
 
     int highestPatient = -1;
     float highestBill = 0.0;
 
+
     for(i = 0; i < patientCount; i++)
     {
+        float consultation;
+        float surchargeRate;
+        float surcharge;
+        float wardCost;
+        float discountRate;
+        float discount;
+        float finalBill;
+
         if(urgencyLevel[i] == 1)
             level1++;
         else if(urgencyLevel[i] == 2)
             level2++;
         else if(urgencyLevel[i] == 3)
             level3++;
+
+
+        consultation = consultationFee[patientSpecialty[i]];
+
+
+        if(urgencyLevel[i] == 1)
+            surchargeRate = 0.00;
+        else if(urgencyLevel[i] == 2)
+            surchargeRate = 0.20;
+        else
+            surchargeRate = 0.50;
+
+        surcharge = consultation * surchargeRate;
+
+        wardCost = 0.00;
+
+        if(admitted[i] == 1)
+        {
+            wardCost = wardRate[patientWard[i]]
+                       * daysAdmitted[i];
+        }
+
+        finalBill = consultation + surcharge + wardCost;
+
+        if(patientAge[i] < 5 || patientAge[i] > 65)
+            discountRate = 0.15;
+        else
+            discountRate = 0.00;
+
+        discount = finalBill * discountRate;
+
+        finalBill = finalBill - discount;
+
+        totalRevenue += finalBill;
+        totalDiscount += discount;
+
+        if(finalBill > highestBill)
+        {
+            highestBill = finalBill;
+            highestPatient = i;
+        }
     }
-
-
-    consultation = consultationFee[patientSpecialty[i]];
-
-    if(urgencyLevel[i] == 1)
-         surchargeRate = 0.00;
-    else if(urgencyLevel[i] == 2)
-         surchargeRate = 0.20;
-    else
-         surchargeRate = 0.50;
-
-    surcharge = consultation * surchargeRate;
-
-    wardCost = 0.0;
-
-    if(admitted[i] == 1)
-    {
-        wardCost = wardRate[patientWard[i]] * daysAdmitted[i];
-    }
-
-    if(patientAge[i] < 5 || patientAge[i] > 65)
-    {
-         discountRate = 0.15;
-    }
-
-    else
-    {
-         discountRate = 0.00;
-
-    }
-
-
-     discount = (consultation + surcharge + wardCost) * discountRate;
-
-     finalBill = consultation + surcharge + wardCost - discount;
-
-     totalRevenue += finalBill;
-     totalDiscount += discount;
-
-     if(finalBill > highestBill)
-     {
-         highestBill = finalBill;
-         highestPatient = i;
-     }
 
     for(i = 0; i < NUM_WARDS; i++)
     {
-        int j;
-
         for(j = 0; j < wardCapacity[i]; j++)
         {
             if(bedOccupancy[i][j] == 1)
@@ -729,23 +860,28 @@ void displayReports()
     printf("\nOccupied Beds        : %d\n", occupied);
     printf("Total Beds           : %d\n", totalBeds);
 
-    printf("\nTotal Revenue          : Rs. %.2f\n", totalRevenue);
-    printf("Total Discounts        : Rs. %.2f\n", totalDiscount);
+    printf("\nTotal Revenue        : Rs. %.2f\n", totalRevenue);
+    printf("Total Discounts      : Rs. %.2f\n", totalDiscount);
 
     if(highestPatient != -1)
     {
-       printf("Highest-Paying Patient : %s\n", patientName[highestPatient]);
-       printf("Highest Bill           : Rs. %.2f\n", highestBill);
+        printf("Highest-Paying Patient : %s\n",
+               patientName[highestPatient]);
+
+        printf("Highest Bill           : Rs. %.2f\n",
+               highestBill);
     }
 
     printf("=====================================\n");
-    }
+}
+
 
 
 void sortPatientsByPriority()
 {
     int i, j;
     int tempInt;
+
     char tempName[100];
     char tempID[20];
 
@@ -753,43 +889,54 @@ void sortPatientsByPriority()
     {
         for(j = i + 1; j < patientCount; j++)
         {
+
             if(urgencyLevel[i] < urgencyLevel[j])
             {
+
                 tempInt = urgencyLevel[i];
                 urgencyLevel[i] = urgencyLevel[j];
                 urgencyLevel[j] = tempInt;
+
 
                 tempInt = patientAge[i];
                 patientAge[i] = patientAge[j];
                 patientAge[j] = tempInt;
 
+
                 tempInt = patientSpecialty[i];
                 patientSpecialty[i] = patientSpecialty[j];
                 patientSpecialty[j] = tempInt;
+
 
                 tempInt = admitted[i];
                 admitted[i] = admitted[j];
                 admitted[j] = tempInt;
 
+
                 tempInt = patientWard[i];
                 patientWard[i] = patientWard[j];
                 patientWard[j] = tempInt;
+
 
                 tempInt = daysAdmitted[i];
                 daysAdmitted[i] = daysAdmitted[j];
                 daysAdmitted[j] = tempInt;
 
+
                 tempInt = assignedBed[i];
                 assignedBed[i] = assignedBed[j];
                 assignedBed[j] = tempInt;
+
 
                 tempInt = waitingTime[i];
                 waitingTime[i] = waitingTime[j];
                 waitingTime[j] = tempInt;
 
+
                 strcpy(tempName, patientName[i]);
                 strcpy(patientName[i], patientName[j]);
                 strcpy(patientName[j], tempName);
+
 
                 strcpy(tempID, patientID[i]);
                 strcpy(patientID[i], patientID[j]);
@@ -798,9 +945,21 @@ void sortPatientsByPriority()
         }
     }
 
-    printf("\nPatients sorted by emergency priority!\n");
-}
+    printf("\n=====================================\n");
+    printf("   PATIENTS SORTED BY PRIORITY\n");
+    printf("=====================================\n");
 
+    for(i = 0; i < patientCount; i++)
+    {
+        printf("\n%d. %s\n", i + 1, patientName[i]);
+        printf("   Patient ID : %s\n", patientID[i]);
+        printf("   Emergency  : %d\n", urgencyLevel[i]);
+        printf("   Specialty  : %s\n",
+               specialtyNames[patientSpecialty[i]]);
+    }
+
+    printf("\n=====================================\n");
+}
 
 
 
@@ -939,7 +1098,7 @@ int main()
                 break;
 
             case 11:
-                calculateBill();
+                completeBill();
                 break;
 
             case 12:
@@ -960,7 +1119,7 @@ int main()
                 break;
 
             default:
-                printf("\nInvalid choice! Please enter 1-7.\n");
+                printf("\nInvalid choice! Please enter 1-15.\n");
         }
 
     } while(choice != 15);
