@@ -612,6 +612,119 @@ void calculateBill()
 
 
 
+void displayReports()
+{
+    int i;
+    int level1 = 0, level2 = 0, level3 = 0;
+    int occupied = 0;
+    int totalBeds = 0;
+
+
+    float totalRevenue = 0.0;
+    float totalDiscount = 0.0;
+    float finalBill;
+    float consultation;
+    float surcharge;
+    float wardCost;
+    float discount;
+    float surchargeRate;
+    float discountRate;
+
+    int highestPatient = -1;
+    float highestBill = 0.0;
+
+    for(i = 0; i < patientCount; i++)
+    {
+        if(urgencyLevel[i] == 1)
+            level1++;
+        else if(urgencyLevel[i] == 2)
+            level2++;
+        else if(urgencyLevel[i] == 3)
+            level3++;
+    }
+
+
+    consultation = consultationFee[patientSpecialty[i]];
+
+    if(urgencyLevel[i] == 1)
+         surchargeRate = 0.00;
+    else if(urgencyLevel[i] == 2)
+         surchargeRate = 0.20;
+    else
+         surchargeRate = 0.50;
+
+    surcharge = consultation * surchargeRate;
+
+    wardCost = 0.0;
+
+    if(admitted[i] == 1)
+    {
+        wardCost = wardRate[patientWard[i]] * daysAdmitted[i];
+    }
+
+    if(patientAge[i] < 5 || patientAge[i] > 65)
+    {
+         discountRate = 0.15;
+    }
+
+    else
+    {
+         discountRate = 0.00;
+
+    }
+
+
+     discount = (consultation + surcharge + wardCost) * discountRate;
+
+     finalBill = consultation + surcharge + wardCost - discount;
+
+     totalRevenue += finalBill;
+     totalDiscount += discount;
+
+     if(finalBill > highestBill)
+     {
+         highestBill = finalBill;
+         highestPatient = i;
+     }
+
+    for(i = 0; i < NUM_WARDS; i++)
+    {
+        int j;
+
+        for(j = 0; j < wardCapacity[i]; j++)
+        {
+            if(bedOccupancy[i][j] == 1)
+                occupied++;
+        }
+
+        totalBeds += wardCapacity[i];
+    }
+
+    printf("\n=====================================\n");
+    printf("          HOSPITAL REPORT\n");
+    printf("=====================================\n");
+
+    printf("Total Patients       : %d\n", patientCount);
+    printf("Normal Patients      : %d\n", level1);
+    printf("Urgent Patients      : %d\n", level2);
+    printf("Critical Patients    : %d\n", level3);
+
+    printf("\nOccupied Beds        : %d\n", occupied);
+    printf("Total Beds           : %d\n", totalBeds);
+
+    printf("\nTotal Revenue          : Rs. %.2f\n", totalRevenue);
+    printf("Total Discounts        : Rs. %.2f\n", totalDiscount);
+
+    if(highestPatient != -1)
+    {
+       printf("Highest-Paying Patient : %s\n", patientName[highestPatient]);
+       printf("Highest Bill           : Rs. %.2f\n", highestBill);
+    }
+
+    printf("=====================================\n");
+    }
+
+
 void sortPatientsByPriority()
 {
     int i, j;
@@ -705,7 +818,7 @@ int main()
                 break;
 
             case 6:
-                printf("\nReports will be added next.\n");
+               displayReports();
                 break;
 
             case 7:
